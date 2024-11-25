@@ -9,6 +9,9 @@ AEnemy::AEnemy()
 
 	PlayerDetectorSphere = CreateDefaultSubobject<USphereComponent>(TEXT("PlayerDetectorSphere"));
 	PlayerDetectorSphere->SetupAttachment(RootComponent);
+
+	HPText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("HPText"));
+	HPText->SetupAttachment(RootComponent);
 }
 
 void AEnemy::BeginPlay()
@@ -17,6 +20,8 @@ void AEnemy::BeginPlay()
 
 	PlayerDetectorSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::DetectorOverlapBegin);
 	PlayerDetectorSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemy::DetectorOverlapEnd);
+
+	UpdateHP(HitPoints);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -92,5 +97,40 @@ void AEnemy::DetectorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor
 	if (Player)
 	{
 		FollowTarget = NULL;
+	}
+}
+
+void AEnemy::UpdateHP(int NewHP)
+{
+	HitPoints = NewHP;
+
+	FString Str = FString::Printf(TEXT("HP: %d"), HitPoints);
+	HPText->SetText(FText::FromString(Str));
+}
+
+void AEnemy::TakeDamage(int DamageAmount, float StunDuration)
+{
+	if (!IsAlive) return;
+
+	UpdateHP(HitPoints - DamageAmount);
+
+	if (HitPoints <= 0.0f)
+	{
+		// Enemy is dead
+
+		UpdateHP(0);
+		HPText->SetHiddenInGame(true);
+
+		IsAlive = false;
+		CanMove = false;
+
+		// Play the die animation
+
+	}
+	else
+	{
+		// Enemy is still alive
+
+		// Play the take hit animation
 	}
 }
