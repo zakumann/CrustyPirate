@@ -6,6 +6,10 @@
 #include "Components/SphereComponent.h"
 #include "Components/TextRenderComponent.h"
 
+#include "PaperZDAnimInstance.h"
+
+#include "Engine/TimerHandle.h"
+
 #include "PlayerCharacter.h"
 
 #include "Enemy.generated.h"
@@ -38,7 +42,12 @@ public:
 	bool IsAlive = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsStunned = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool CanMove = true;
+
+	FTimerHandle StunTimer;
 
 	AEnemy();
 	virtual void BeginPlay() override;
@@ -56,4 +65,7 @@ public:
 	void UpdateHP(int NewHP);
 
 	void TakeDamage(int DamageAmount, float StunDuration);
+
+	void Stun(float DurationInSeconds);
+	void OnStunTimerTimeout();
 };

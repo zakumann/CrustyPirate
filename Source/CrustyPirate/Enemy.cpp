@@ -28,7 +28,7 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (IsAlive && FollowTarget)
+	if (IsAlive && FollowTarget && !IsStunned)
 	{
 		float MoveDirection = (FollowTarget->GetActorLocation().X - GetActorLocation().X) > 0.0f ? 1.0f : -1.0f;
 		UpdateDirection(MoveDirection);
@@ -125,12 +125,34 @@ void AEnemy::TakeDamage(int DamageAmount, float StunDuration)
 		CanMove = false;
 
 		// Play the die animation
-
+		GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CrabbyStateMachine"));
 	}
 	else
 	{
 		// Enemy is still alive
+		Stun(StunDuration);
 
 		// Play the take hit animation
+		GetAnimInstance()->JumpToNode(FName("JumpTakeHit"), FName("CrabbyStateMachine"));
 	}
+}
+
+void AEnemy::Stun(float DurationInSeconds)
+{
+	IsStunned = true;
+
+	bool IsTimerAlreadyActive = GetWorldTimerManager().IsTimerActive(StunTimer);
+	if (IsTimerAlreadyActive)
+	{
+		GetWorldTimerManager().ClearTimer(StunTimer);
+	}
+
+	GetWorldTimerManager().SetTimer(StunTimer, this, &AEnemy::OnStunTimerTimeout, 1.0f, false, DurationInSeconds);
+
+	GetAnimInstance()->StopAllAnimationOverrides();
+}
+
+void AEnemy::OnStunTimerTimeout()
+{
+	IsStunned = false;
 }
