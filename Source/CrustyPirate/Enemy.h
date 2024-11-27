@@ -32,11 +32,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	APlayerCharacter* FollowTarget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperZDAnimSequence* AttackAnimSequence;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float StopDistanceToTarget = 70.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int HitPoints = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackCooldownInSeconds = 3.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsAlive = true;
@@ -47,7 +53,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool CanMove = true;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool CanAttack = true;
+
 	FTimerHandle StunTimer;
+	FTimerHandle AttackCooldownTimer;
+
+	FZDOnAnimationOverrideEndSignature OnAttackOverrideEndDelegate;
 
 	AEnemy();
 	virtual void BeginPlay() override;
@@ -68,4 +80,8 @@ public:
 
 	void Stun(float DurationInSeconds);
 	void OnStunTimerTimeout();
+
+	void Attack();
+	void OnAttackCooldownTimerTimeout();
+	void OnAttackOverrideAnimEnd(bool Completed);
 };
