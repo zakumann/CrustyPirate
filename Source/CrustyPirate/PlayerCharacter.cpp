@@ -147,3 +147,33 @@ void APlayerCharacter::EnableAttackCollisionBox(bool Enabled)
 		AttackCollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	}
 }
+
+void APlayerCharacter::TakeDamage(int DamageAmount, float StunDuration)
+{
+	if (!IsAlive) return;
+
+	UpdateHP(HitPoints - DamageAmount);
+
+	if (HitPoints <= 0)
+	{
+		// Player is dead
+		UpdateHP(0);
+
+		IsAlive = false;
+		CanMove = false;
+		CanAttack = false;
+
+		GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CaptainStateMachine"));
+		EnableAttackCollisionBox(false);
+	}
+	else
+	{
+		// Player is still alive
+		GetAnimInstance()->JumpToNode(FName("JumpTakeHit"), FName("CaptainStateMachine"));
+	}
+}
+
+void APlayerCharacter::UpdateHP(int NewHP)
+{
+	HitPoints = NewHP;
+}

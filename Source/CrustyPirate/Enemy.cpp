@@ -12,6 +12,9 @@ AEnemy::AEnemy()
 
 	HPText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("HPText"));
 	HPText->SetupAttachment(RootComponent);
+
+	AttackCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackCollisionBox"));
+	AttackCollisionBox->SetupAttachment(RootComponent);
 }
 
 void AEnemy::BeginPlay()
@@ -24,6 +27,9 @@ void AEnemy::BeginPlay()
 	UpdateHP(HitPoints);
 
 	OnAttackOverrideEndDelegate.BindUObject(this, &AEnemy::OnAttackOverrideAnimEnd);
+
+	AttackCollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AttackBoxOverlapBegin);
+	EnableAttackCollisionBox(false);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -134,6 +140,8 @@ void AEnemy::TakeDamage(int DamageAmount, float StunDuration)
 		CanAttack = false;
 
 		GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CrabbyStateMachine"));
+
+		EnableAttackCollisionBox(false);
 	}
 	else
 	{
@@ -188,5 +196,29 @@ void AEnemy::OnAttackOverrideAnimEnd(bool Completed)
 	if (IsAlive)
 	{
 		CanMove = true;
+	}
+}
+
+void AEnemy::AttackBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor);
+
+	if (Player)
+	{
+		Player->TakeDamage(AttackDamage, AttackStunDuration);
+	}
+}
+
+void AEnemy::EnableAttackCollisionBox(bool Enabled)
+{
+	if (Enabled)
+	{
+		AttackCollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		AttackCollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	}
+	else
+	{
+		AttackCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		AttackCollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	}
 }
