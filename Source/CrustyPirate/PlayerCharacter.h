@@ -15,6 +15,7 @@
 #include "PaperZDAnimInstance.h"
 
 #include "Components/BoxComponent.h"
+#include "Engine/TimerHandle.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -55,6 +56,9 @@ public:
 	bool IsAlive = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsStunned = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool CanMove = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -70,6 +74,8 @@ public:
 	float AttackStunDuration = 0.3f;
 
 	FZDOnAnimationOverrideEndSignature OnAttackOverrideEndDelegate;
+
+	FTimerHandle StunTimer;
 
 	APlayerCharacter();
 	virtual void BeginPlay() override;
@@ -93,4 +99,7 @@ public:
 
 	void TakeDamage(int DamageAmount, float StunDuration);
 	void UpdateHP(int NewHP);
+
+	void Stun(float DurationInSeconds);
+	void OnStunTimerTimeout();
 };
