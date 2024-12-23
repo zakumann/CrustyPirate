@@ -17,6 +17,9 @@
 #include "Components/BoxComponent.h"
 #include "Engine/TimerHandle.h"
 
+#include "PlayerHUD.h"
+#include "CrustyPirateGameInstance.h"
+
 #include "PlayerCharacter.generated.h"
 
 /**
@@ -51,6 +54,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperZDAnimSequence* AttackAnimSequence;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UPlayerHUD> PlayerHUDClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPlayerHUD* PlayerHUDWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCrustyPirateGameInstance* MyGameInstance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsAlive = true;
