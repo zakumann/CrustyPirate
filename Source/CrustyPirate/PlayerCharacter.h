@@ -16,9 +16,11 @@
 
 #include "Components/BoxComponent.h"
 #include "Engine/TimerHandle.h"
+#include "Sound/SoundBase.h"
 
 #include "PlayerHUD.h"
 #include "CrustyPirateGameInstance.h"
+#include "CollectableItem.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -63,6 +65,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCrustyPirateGameInstance* MyGameInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* ItemPickupSound;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsAlive = true;
@@ -114,4 +119,6 @@ public:
 
 	void Stun(float DurationInSeconds);
 	void OnStunTimerTimeout();
+
+	void CollectItem(CollectableType ItemType);
 };

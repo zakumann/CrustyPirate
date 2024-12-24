@@ -223,3 +223,31 @@ void APlayerCharacter::OnStunTimerTimeout()
 {
 	IsStunned = false;
 }
+
+void APlayerCharacter::CollectItem(CollectableType ItemType)
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), ItemPickupSound);
+
+	switch (ItemType)
+	{
+		case CollectableType::HealthPotion:
+		{
+
+		}break;
+
+		case CollectableType::Diamond:
+		{
+
+		}break;
+
+		case CollectableType::DoubleJumpUpgrade:
+		{
+
+		}break;
+
+		default:
+		{
+
+		}break;
+	}
+}
