@@ -39,6 +39,11 @@ void APlayerCharacter::BeginPlay()
 	if (MyGameInstance)
 	{
 		HitPoints = MyGameInstance->PlayerHP;
+
+		if (MyGameInstance->IsDoubleJumpUnlocked)
+		{
+			UnlockDoubleJump();
+		}
 	}
 
 	if (PlayerHUDClass)
@@ -49,8 +54,8 @@ void APlayerCharacter::BeginPlay()
 			PlayerHUDWidget->AddToPlayerScreen();
 
 			PlayerHUDWidget->SetHP(HitPoints);
-			PlayerHUDWidget->SetDiamonds(50);
-			PlayerHUDWidget->SetLevel(1);
+			PlayerHUDWidget->SetDiamonds(MyGameInstance->CollectedDiamondCount);
+			PlayerHUDWidget->SetLevel(MyGameInstance->CurrentLevelIndex);
 		}
 	}
 }
@@ -188,6 +193,9 @@ void APlayerCharacter::TakeDamage(int DamageAmount, float StunDuration)
 
 		GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CaptainStateMachine"));
 		EnableAttackCollisionBox(false);
+
+		float RestartDelay = 3.0f;
+		GetWorldTimerManager().SetTimer(RestartTimer, this, &APlayerCharacter::OnRestartTimerTimeout, 1.0f, false, RestartDelay);
 	}
 	else
 	{
@@ -232,17 +240,23 @@ void APlayerCharacter::CollectItem(CollectableType ItemType)
 	{
 		case CollectableType::HealthPotion:
 		{
-
+			int HealAmounbt = 25;
+			UpdateHP(HitPoints + HealAmounbt);
 		}break;
 
 		case CollectableType::Diamond:
 		{
-
+			MyGameInstance->AddDiamond(1);
+			PlayerHUDWidget->SetDiamonds(MyGameInstance->CollectedDiamondCount);
 		}break;
 
 		case CollectableType::DoubleJumpUpgrade:
 		{
-
+			if (!MyGameInstance->IsDoubleJumpUnlocked)
+			{
+				MyGameInstance->IsDoubleJumpUnlocked = true;
+				UnlockDoubleJump();
+			}
 		}break;
 
 		default:
@@ -250,4 +264,14 @@ void APlayerCharacter::CollectItem(CollectableType ItemType)
 
 		}break;
 	}
+}
+
+void APlayerCharacter::UnlockDoubleJump()
+{
+	JumpMaxCount = 2;
+}
+
+void APlayerCharacter::OnRestartTimerTimeout()
+{
+	MyGameInstance->RestartGame();
 }

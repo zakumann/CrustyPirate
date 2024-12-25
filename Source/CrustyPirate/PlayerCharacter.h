@@ -93,6 +93,7 @@ public:
 	FZDOnAnimationOverrideEndSignature OnAttackOverrideEndDelegate;
 
 	FTimerHandle StunTimer;
+	FTimerHandle RestartTimer;
 
 	APlayerCharacter();
 	virtual void BeginPlay() override;
@@ -121,4 +122,7 @@ public:
 	void OnStunTimerTimeout();
 
 	void CollectItem(CollectableType ItemType);
+	void UnlockDoubleJump();
+
+	void OnRestartTimerTimeout();
 };
