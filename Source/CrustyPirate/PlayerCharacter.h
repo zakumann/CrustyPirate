@@ -73,6 +73,9 @@ public:
 	bool IsAlive = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsActive = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsStunned = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -125,4 +128,6 @@ public:
 	void UnlockDoubleJump();
 
 	void OnRestartTimerTimeout();
+
+	void Deactivate();
 };
