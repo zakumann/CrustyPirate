@@ -61,10 +61,10 @@ public:
 	UPaperZDAnimSequence* AttackAnimSequence;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UPlayerHUD> PlayerHUDClass;
+	TSubclassOf<UPlayerHUD> PlayerHudClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UPlayerHUD* PlayerHUDWidget;
+	UPlayerHUD* PlayerHudWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCrustyPirateGameInstance* MyGameInstance;
@@ -132,6 +132,7 @@ public:
 
 	void OnRestartTimerTimeout();
 
+	UFUNCTION(BlueprintCallable)
 	void Deactivate();
 
 	void QuitGame();

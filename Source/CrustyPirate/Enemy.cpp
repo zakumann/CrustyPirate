@@ -108,7 +108,7 @@ void AEnemy::DetectorOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor
 
 	if (Player)
 	{
-		FollowTarget = NULL;
+		FollowTarget = nullptr;
 	}
 }
 

@@ -31,5 +31,7 @@ public:
 	void AddDiamond(int Amount);
 
 	void ChangeLevel(int LevelIndex);
+
+	UFUNCTION(BlueprintCallable)
 	void RestartGame();
 };

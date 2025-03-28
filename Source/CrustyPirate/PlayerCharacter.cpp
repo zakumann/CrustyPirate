@@ -47,16 +47,16 @@ void APlayerCharacter::BeginPlay()
 		}
 	}
 
-	if (PlayerHUDClass)
+	if (PlayerHudClass)
 	{
-		PlayerHUDWidget = CreateWidget<UPlayerHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0), PlayerHUDClass);
-		if (PlayerHUDWidget)
+		PlayerHudWidget = CreateWidget<UPlayerHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0), PlayerHudClass);
+		if (PlayerHudWidget)
 		{
-			PlayerHUDWidget->AddToPlayerScreen();
+			PlayerHudWidget->AddToPlayerScreen();
 
-			PlayerHUDWidget->SetHP(HitPoints);
-			PlayerHUDWidget->SetDiamonds(MyGameInstance->CollectedDiamondCount);
-			PlayerHUDWidget->SetLevel(MyGameInstance->CurrentLevelIndex);
+			PlayerHudWidget->SetHP(HitPoints);
+			PlayerHudWidget->SetDiamonds(MyGameInstance->CollectedDiamondCount);
+			PlayerHudWidget->SetLevel(MyGameInstance->CurrentLevelIndex);
 		}
 	}
 }
@@ -215,7 +215,7 @@ void APlayerCharacter::UpdateHP(int NewHP)
 {
 	HitPoints = NewHP;
 	MyGameInstance->SetPlayerHP(HitPoints);
-	PlayerHUDWidget->SetHP(HitPoints);
+	PlayerHudWidget->SetHP(HitPoints);
 }
 
 void APlayerCharacter::Stun(float DurationInSeconds)
@@ -247,14 +247,14 @@ void APlayerCharacter::CollectItem(CollectableType ItemType)
 	{
 		case CollectableType::HealthPotion:
 		{
-			int HealAmounbt = 25;
-			UpdateHP(HitPoints + HealAmounbt);
+			int HealAmount = 25;
+			UpdateHP(HitPoints + HealAmount);
 		}break;
 
 		case CollectableType::Diamond:
 		{
 			MyGameInstance->AddDiamond(1);
-			PlayerHUDWidget->SetDiamonds(MyGameInstance->CollectedDiamondCount);
+			PlayerHudWidget->SetDiamonds(MyGameInstance->CollectedDiamondCount);
 		}break;
 
 		case CollectableType::DoubleJumpUpgrade:
